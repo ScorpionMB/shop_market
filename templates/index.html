@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{%  load static %}
+
+{% block content %}
+
+    <div class="wrapper_index">
+        <div class="wrapper_site_bar">
+            <div class="site_bar">
+                <a href="{% url 'index' %}">Главная</a>
+                <a href="{% url 'shop:products' %}">Каталог</a>
+                <a href="{% url 'shop:dostavka' %}">Доставка</a>
+                <a href="{% url 'shop:reviews' %}">Отзывы</a>
+                <a href="{% url 'pers_account' user.id %}">Личный кабинет</a>
+                <a href="{% url 'registr' %}">Регистрация/Вход</a>
+                <a href="{% url 'shop:about' %}">O нас</a>
+            </div>
+
+            <div class="pogoda-script">
+                <!-- Gismeteo informer START -->
+                <div id="ml_09fe81ad">
+                    <div style="padding:0;margin:0;" id="ml_09fe81ad_i" v='1.1' a='{"t":"v","lang":"ru","ids":["222"],"a_dt_bg":"#6D4C41","a_dt_c":"#FFFFFF","a_wn_bg":"#4E342E","a_wn_c":"#FFFFFF","a_wi_bg":"#6D4C41","a_wi_c":"#FFFFFF"}'></div>
+                    <div id="ml_09fe81ad_c" style="padding:0;margin:0;padding:7px 5px;">
+                        <img src="https://meteolabs.ru/assets/img/logo_z_b.svg" style="width:15px;opacity:0.7;margin-right:5px;position:relative;top:1px;display:inline-block;">
+                        <a href="https://meteolabs.ru/" style="color:grey;font-size:12px;text-decoration:none;" target="_blank" id="ml_09fe81ad_u">Погода сегодня</a>
+                    </div>
+                </div>
+                <script async src="https://app.meteolabs.ru/js/?id=ml_09fe81ad"></script>
+                <!-- Gismeteo informer END -->
+            </div>
+            
+        </div>
+        <div class="wrapper_slide">
+            <div class="carousel_wrapper">{% include 'carousel.html' %}</div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+

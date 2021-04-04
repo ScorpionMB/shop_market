@@ -1,0 +1,93 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/admin.css' %}" />
+{% endblock %}
+
+{% block title %}
+    Order {{ order.id }} {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">Начало</a> &rsaquo;
+        <a href="{% url 'admin:orders_order_changelist' %}">Заказы</a>
+        &rsaquo;
+        <a href="{% url 'admin:orders_order_change' order.id %}">Заказ {{ order.id }}</a>
+        &rsaquo; Детально
+    </div>
+{% endblock %}
+
+{% block content %}
+    <h1>Заказ {{ order.id }}</h1>
+    <ul class="object-tools">
+        <li>
+            <a href="#" onclick="window.print();">Печать заказа</a>
+        </li>
+    </ul>
+    <table>
+        <tr>
+            <th>Создан</th>
+            <td>{{ order.created }}</td>
+        </tr>
+        <tr>
+            <th>Заказчик</th>
+            <td>{{ order.first_name }} {{ order.last_name }}</td>
+        </tr>
+        <tr>
+            <th>E-mail</th>
+            <td><a href="mailto:{{ order.email }}">{{ order.email }}</a></td>
+        </tr>
+        <tr>
+            <th>Адр. данные</th>
+            <td>{{ order.postal_code }}, адрес: {{ order.address }}, г. {{ order.city }}</td>
+        </tr>
+        <tr>
+            <th>Скидка</th>
+            <td>"{{ order.coupon }}" (- {{ order.discount }}%)</td>
+        </tr>
+        <tr>
+            <th>Сумма заказа</th>
+            <td>{{ order.get_total_cost }} руб.</td>
+        </tr>
+        <tr>
+            <th>Статус</th>
+            <td>{{ order.get_status_display }}</td>
+        </tr>
+    </table>
+    <div class="module">
+        <div class="tabular inline-related last-related">
+            <table>
+                <h2>Расчет суммы</h2>
+                <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Итого</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in order.items.all %}
+                    <tr class="row{% cycle '1' '2' %}">
+                        <td><img src="{{ item.product.product_img.url }}" width="33" alt=""></td>
+                        <td class="num">{{ item.price }} руб.</td>
+                        <td class="num">{{ item.quantity }}</td>
+                        <td class="num">{{ item.get_cost }} руб.</td>
+                    </tr>
+                {% endfor %}
+                <tr class="total">
+                    <td colspan="3">Скидка</td>
+                    <td class="num">"{{ order.coupon }}" (- {{ order.discount }}%)</td>
+                </tr>    
+                <tr class="total">    
+                    <td colspan="3">Итого</td>
+                    <td class="num">{{ order.get_total_cost }} руб.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

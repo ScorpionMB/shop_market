@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+    {% block content %}
+
+    <div class="wrapper_review">
+        <h4 class="review_title">Отзывы</h4>
+        <hr class="review_hr">
+        {% for product in product_list %}
+            {% if product.reviews.count %} 
+            <div class="product_review">
+                <img src="{% if product.product_img %}
+                {{ product.product_img.url }}
+                {% else %}{% static 'image/no_image.jpg' %}
+                {% endif %}" width="80" alt="">
+                <h6 class="product_review_title">{{ product.product_title }}</h6>
+            </div>
+            {% for review in product.reviews.all %}
+                <!-- <p class="count_review">Отзыв {{ forloop.counter }} к товару</p> -->
+                <p class="review_text_wrapper"><small class="review_user_date"><span class="user_color">{{ review.user }}
+                </span> {{ review.review_dt }}</small><br><span class="review_text">{{ review.review_text }}</span></p>
+                <!-- <p class="review_text">{{ review.review_text }}</p> -->
+            {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% endblock %}

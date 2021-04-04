@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Thank you{% endblock %}
+
+{% block content %}
+
+    <h3 class="order_meesage">Спасибо!</h3>
+    <h6 class="order_meesage_text">Ваш заказ успешно сформирован. Номер заказа: 
+        <strong>{{ order.order_big }}</strong>.</h6>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+    
+    <h3 class="order_title">Данные заказа</h3>    
+    <div class="wrapper_order">
+        <div class="order-info">
+            <h5>Ваш заказ</h5>
+            <ul>
+                {% for item in cart %}
+                    <li>
+                        <img src="
+                        {% if item.product.product_img %}
+                            {{ item.product.product_img.url }}
+                        {% else %}
+                            {% static 'image/no_image.jpg' %}
+                        {% endif %}" width="53"> ({{ item.quantity }} шт.).  
+                        <span> - {{ item.total_price }} руб.</span>
+                    </li>
+                {% endfor %}
+                {% if cart.coupon %}
+                    <li class="discount_order"><h6>
+                        "{{ cart.coupon.code }}" ({{ cart.coupon.discount }}% минус)
+                        <span>- {{ cart.get_discount|floatformat:"2" }} руб.</span></h6>
+                    </li>
+                {% endif %}
+            </ul>
+            <p>Итого: {{ cart.get_total_price_after_discount|floatformat:"2" }} руб.</p>
+        </div>
+        <form action="." method="post" class="order-form">
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Сформировать</button>
+            {% csrf_token %}
+        </form>
+    </div>
+{% endblock %}

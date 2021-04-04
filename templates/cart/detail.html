@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ваша корзина{% endblock %}
+
+{% block content %}
+    <h4 class="cart_title">Ваша корзина</h4>
+    <table class="cart">
+        <tr class="cart_head">
+            <th class="cart_th">Изображение</th>
+            <th class="cart_th">Товар</th>
+            <th class="cart_th">Количество</th>
+            <th class="cart_th">Удалить</th>
+            <th class="cart_th">Цена товара</th>
+            <th class="cart_th">Итоговая цена</th>
+        </tr>
+        {% for item in cart %}
+            {% with product=item.product %}
+                <tr>
+                    <td class="cart_td">
+                        <a href="{% url 'shop:product' product.id %}">
+                            <img src="
+                                {% if product.product_img %}
+                                    {{ product.product_img.url }}
+                                {% else %}
+                                    {% static 'image/no_image.jpg' %}
+                                {% endif %}" width="133">
+                        </a>
+                    </td>
+                    <td class="cart_td">{{ product.product_title }}</td>
+                    <td class="cart_td">
+                        <div class="cart_modificate">
+                            <div>{{ item.quantity }} шт.</div>
+                            <form class="cart_form_margin" action="{% url 'cart:cart_modificate' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{product.id}}" />
+                                <input class="cart_form" name="button" type="submit" value="+" />
+                                <input class="cart_form" name="button" type="submit" value="-" />
+                            </form>      
+                        </div>
+                    </td>                  
+                    <td class="cart_td"><a href="{% url 'cart:cart_remove' product.id %}">Remove</a></td>
+                    <td class="cart_td">{{ item.price }} руб.</td>
+                    <td class="cart_td">{{ item.total_price }} руб.</td>
+                </tr>
+            {% endwith %}
+        {% endfor %}
+        {% if cart.coupon and cart.coupon.code != 'SALE7' or cart.coupon.code == 'SALE7' and not user.orders.all %}
+            <tr class="cart_head">
+                <td class="cart_td bold">Всего до скидки:</td>
+                <td class="cart_td" colspan="4"></td>
+                <td class="cart_td bold">{{ cart.get_total_price }} руб.</td>
+            </tr>
+            <tr class="cart_head">
+                <td class="cart_td">
+                    "{{ cart.coupon.code }}" купон
+                    ({{ cart.coupon.discount }}% минус)
+                </td>
+                <td class="cart_td" colspan="4"></td>
+                <td class="cart_td">
+                    - {{ cart.get_discount|floatformat:"2" }} руб.
+                </td>
+            </tr>
+        {% endif %}
+            <tr class="cart_head">
+                <td class="cart_td bold">Всего:</td>
+                <td class="cart_td" colspan="4"></td>
+                <td class="cart_td bold">
+                    {% if cart.coupon and cart.coupon.code != 'SALE7' or cart.coupon.code == 'SALE7' and not user.orders.all %}
+                    {{ cart.get_total_price_after_discount|floatformat:"2" }} руб.
+                    {% else %}
+                    {{ cart.get_total_price|floatformat:"2" }} руб.
+                    {% endif %}
+                </td>
+            </tr>
+
+    </table>
+    <form class="discount" action="{% url 'coupons:apply' %}" method="post">
+        {{ coupon_apply_form }}
+        <button type="submit" class="btn btn-success btn_discount">Применить</button>
+        {% csrf_token %}
+    </form>
+    <div class="wrapper_continue_checkout">
+        <p class="cart_continue_checkout">
+            <a href="{% url 'shop:products' %}">Продолжить покупки</a>
+        </p>
+    </div>
+    <div class="wrapper_continue_checkout">
+        <p class="cart_continue_checkout">
+            <a href="{% url 'orders:order_create' %}">Сформировать</a>
+        </p>
+    </div>
+
+{% endblock %}
+

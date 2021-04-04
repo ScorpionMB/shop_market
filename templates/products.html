@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load my_filters %}
+
+{% block content %}
+
+
+<!-- Товары -->
+<section>
+    <div class="header_katalog_category">
+        <div class="katalog">
+            <h3 class="katalog_title">каталог</h3>
+            <h6 class="count_list">{{ object_list|length|make_russian:'товар' }}</h6>
+        </div>
+        <div class="btn_category">
+            <div class="btn-group">
+                <button type="button" class="btn btn-success">Категория</button>
+                <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                <a class="dropdown-item" href="?all=all">Все</a>
+                <a class="dropdown-item" href="?filter=a">Арабская</a>
+                <a class="dropdown-item" href="?filter=b">Корейская</a>
+                <a class="dropdown-item" href="?filter=c">Аюрведа</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="products">
+        {% for product in object_list %}
+            <div class="product">
+                <h5 class="product_wrap">
+                    <a href="{{ product.pk }}">
+                        <h6 class="product_title">{{ product.title_capitalize }}</h6> 
+                        <img src="{% if product.product_img %}{{ product.product_img.url }}{% else %}{% static 'image/no_image.jpg' %}{% endif %}" width="240" alt="">
+                    </a>
+                </h5>
+                <h6 class="price">Цена: {{ product.product_new_price }} (<span class="old_price">{{ product.product_old_price }})</span>руб.</h6>
+                <h6 class="copy">Осталось {{ product.product_copy }} шт.</h6>
+                <form  class="one_product_form" action="{% url 'cart:cart_add' product.id %}" method="post">
+                    {{ cart_product_form }}
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success" style="padding:6px;
+                    font-size:80%;">В корзину</button>
+                </form>
+                <h6 class="country">Страна: {{ product.get_product_country_display }}</h6>
+                <h6 class="description">Описание товара: </h6>
+                <p>{{ product.product_short_description }}</p>
+            </div>
+        {% endfor %}
+    </div>   
+</section>
+
+
+<!-- Доставка -->
+{% include 'dostavka.html' %}
+
+{% endblock %}

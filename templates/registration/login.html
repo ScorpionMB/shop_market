@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="login_page">
+  <form method="post">  
+    {% csrf_token %}  
+    {{ form|crispy }}  
+    <button type="submit" class="btn btn-success" style="padding: 6px 16px; font-size:90%;box-shadow: 1px 1px 2px black;">войти</button> 
+  </form>
+  <p><a href="{% url 'crm:password_reset' %}">Забыли Ваш пароль?</a></p>
+</div>
+
+<hr>
+<h5 class="login">Здесь можно войти через сторонние сайты.</h5>
+{% load socialaccount %}
+<div class="wrapper_social">
+	<a class="social google" href="{% provider_login_url 'google' method='oauth2' %}">
+		<img src="{% static 'image/google.jpg' %}" width="28" alt="">
+		<p class="social_text"> Login with Google</p>
+	</a>
+	<a class="social ok" href="{% provider_login_url 'odnoklassniki' method='oauth2' %}">
+		<img src="{% static 'image/ok.jpg' %}" width="34" alt="">
+		<p class="social_text"> Login with OK</p>
+	</a>
+	<a class="social vk" href="{% provider_login_url 'vk' method='oauth2' %}">
+		<img src="{% static 'image/vk.jpg' %}" width="30" alt="">
+		<p class="social_text"> Login with VK</p>
+	</a>
+	<a class="social yandex" href="{% provider_login_url 'yandex' method='oauth2' %}">
+		<img src="{% static 'image/yandex.jpg' %}" width="30" alt="">
+		<p class="social_text"> Login with Yandex</p>
+	</a>
+	<a class="social mail" href="https://oauth.mail.ru/login
+    ?client_id=3ee9d08643cb41ebbe2c16a3a61c5573
+    &response_type=code
+    &scope=userinfo
+    &redirect_uri=http://127.0.0.1:8000/registr/
+    &state=some_state">
+		<img src="{% static 'image/yandex.jpg' %}" width="30" alt="">
+		<p class="social_text"> Login with Mail.ru</p>
+	</a>
+	
+</div>
+
+{% endblock %} 
+
+<!-- <a class="social twitter" href="{% provider_login_url 'twitter' method='oauth2' %}">
+		<img src="{% static 'image/twitter.jpg' %}" width="26" alt="">
+		<p class="social_text"> Login with Twitter</p>
+	</a>
+	<a class="social facebook" href="{% provider_login_url 'facebook' method='oauth2' %}">
+		<img src="{% static 'image/facebook.jpg' %}" width="32" alt="">
+		<p class="social_text"> Login with Facebook</p>
+	</a>
+	<a class="social inst" href="{% provider_login_url 'instagram' method='oauth2' %}">
+		<img src="{% static 'image/instagram.jpg' %}" width="22" alt="">
+		<p class="social_text"> Login with Instagram</p>
+	</a> -->

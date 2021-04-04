@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load my_filters %}
+
+{% block content %}
+
+<!-- Один товар -->
+
+
+<section>
+    <div class="product_one"> 
+        <h5 class="product_title">{{ product.product_title }}</h5>
+        <img class="img_product" src="{% if product.product_img %}{{ product.product_img.url }}{% else %}{% static 'image/no_image.jpg' %}{% endif %}" width="293" alt="">
+        <h6 class="one_price"><span class="old_price">Старая цена: {{ product.product_old_price }} руб.</span>
+            <span class="new_price">Цена: {{ product.product_new_price }} руб.</span></h6>
+        <h6 class="one_copy">Осталось {{ product.product_copy }} шт.</h6>
+        <form  class="one_product_form" action="{% url 'cart:cart_add' product.id %}" method="post">
+            {{ cart_product_form }}
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">В корзину</button>
+        </form>
+        <h6 class="one_country">Страна: {{ product.get_product_country_display }}</h6>
+        <h6 class="one_description">Описание товара: </h6>
+        <p class="one_text">{{ product.product_description }}</p>
+
+        
+        <h5 class="add_reviev_text">Вы можете добавить отзыв.</h5>
+        <form action="." method="post">
+            {{ review_form.as_p }}
+            {% csrf_token %}
+            <button type="submit" class="btn btn-info">Добавить отзыв</button>
+        </form>
+       
+        
+        {% if product.reviews.count %}
+        <hr class="product_hr">
+        <h5 class="review_product_title">Отзывы:</h5>
+        <p class="count_review">У товара {{ product.reviews.count|make_russian:'отзыв' }}</p>
+        {% for review in product.reviews.all %}
+        <p class="count_review">Отзыв {{ forloop.counter }} к товару</p>
+        <p><small class="review_user_date"><span class="user_red">{{ review.user }}</span> {{ review.review_dt }}</small>
+            <br><span class="review_product_text">{{ review.review_text }}</span></p>
+        <img class="r_hr">
+        {% endfor %}
+        {% endif %}
+
+    </div> 
+</section>
+
+<!-- Доставка -->
+{% include 'dostavka.html' %}
+
+{% endblock %}
